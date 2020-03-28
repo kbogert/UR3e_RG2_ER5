@@ -1,0 +1,17 @@
+<launch>
+  <!-- send table urdf to param server -->
+  <param name="table1_description" command="$(find xacro)/xacro.py $(find pick_place)/urdf/table1.urdf.xacro" />
+
+  <param name="table2_description" command="$(find xacro)/xacro.py $(find pick_place)/urdf/table2.urdf.xacro" />
+
+  <param name="object_description" command="$(find xacro)/xacro.py $(find pick_place)/urdf/object.urdf.xacro" />
+
+  <!-- push description to factory and spawn robot in gazebo -->
+  <!--node name="spawn_table1" pkg="gazebo_ros" type="spawn_model" args="-urdf -param table1_description -z 0.01 -model table1" respawn="false" output="screen" /-->
+
+
+  <node name="spawn_table2" pkg="gazebo_ros" type="spawn_model" args="-urdf -param table2_description -z 0.01 -model table2" respawn="false" output="screen" />
+
+
+  <node name="spawn_object" pkg="gazebo_ros" type="spawn_model" args="-urdf -param object_description -z 0.01 -model object" respawn="false" output="screen" />
+</launch>

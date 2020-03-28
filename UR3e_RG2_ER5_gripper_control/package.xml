@@ -1,0 +1,15 @@
+<package>
+  <name>UR3e_RG2_ER5_gripper_control</name>
+  <version>0.1.0</version>
+  <description>
+    Contains a node that provides a GripperCommand action server for the rg2 gripper.
+  </description>
+  <author> </author>
+  <maintainer email="TODO@gmail.com"> TODO</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>rospy</run_depend>
+  <run_depend>control_msgs</run_depend>
+</package>

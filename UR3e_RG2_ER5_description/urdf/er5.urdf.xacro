@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!-- xacro for er5 -->
+
+<robot name="er5" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:macro name="er5" params="prefix">
+    
+    <link name="${prefix}er5_body_link">
+      <visual>
+        <origin rpy="1.57 0 3.14" xyz="0.53 -0.27 -1.05"/>
+        <geometry>
+          <mesh filename="package://UR3e_RG2_ER5_description/meshes/er5_base/er5_.STL" scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="White">
+          <color rgba="1.0 1.0 1.0 1.0"/>
+        </material>
+      </visual>
+      <collision>
+        <origin rpy="1.57 0 3.14" xyz="0.53 -0.27 -1.05"/>
+        <geometry>
+          <mesh filename="package://UR3e_RG2_ER5_description/meshes/er5_base/er5_.STL" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="1"/>
+        <inertia ixx="1" ixy="0.0" ixz="0.0" iyy="1" iyz="0.0" izz="1"/>
+      </inertial>
+    </link>
+
+
+  </xacro:macro>
+</robot>
