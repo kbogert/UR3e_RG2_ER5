@@ -14,9 +14,7 @@
 
 
   <!-- arm -->
-  <xacro:arg name="kinematics_config" default="$(find ur_e_description)/config/ur3e_default.yaml"/>
   <xacro:ur3e_robot prefix="" joint_limited="true"
-    kinematics_file="${load_yaml('$(arg kinematics_config)')}"
     shoulder_pan_lower_limit="${-pi}" shoulder_pan_upper_limit="${pi}"
     shoulder_lift_lower_limit="${-pi}" shoulder_lift_upper_limit="${pi}"
     elbow_joint_lower_limit="${-pi}" elbow_joint_upper_limit="${pi}"
