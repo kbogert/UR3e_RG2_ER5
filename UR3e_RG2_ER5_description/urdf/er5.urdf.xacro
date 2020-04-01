@@ -15,9 +15,11 @@
         </material>
       </visual>
       <collision>
-        <origin rpy="1.57 0 3.14" xyz="0.53 -0.27 -1.05"/>
+<!--        <origin rpy="1.57 0 3.14" xyz="0.53 -0.27 -1.05"/> -->
+        <origin rpy="0 0 0" xyz=".30 0 -.625"/>
         <geometry>
-          <mesh filename="package://UR3e_RG2_ER5_description/meshes/er5_base/er5_.STL" scale="0.001 0.001 0.001"/>
+              <box size="0.65 0.27 .2"/>
+<!--          <mesh filename="package://UR3e_RG2_ER5_description/meshes/er5_base/er5_.STL" scale="0.001 0.001 0.001"/>-->
         </geometry>
       </collision>
       <inertial>
