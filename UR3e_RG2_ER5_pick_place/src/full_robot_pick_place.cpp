@@ -12,16 +12,36 @@
 
 ////////////////////////////////////////////////////////////////////////////////////
 
-void openGripper()
+void openGripper(trajectory_msgs::JointTrajectory& posture)
 {
-  
+  // BEGIN_SUB_TUTORIAL open_gripper
+  /* Add both finger joints of panda robot. */
+  posture.joint_names.resize(1);
+  posture.joint_names[0] = "rg2_eef_joint";
+  posture.joint_names[0] = "wrist_3_joint";
+
+  /* Set them as open, wide enough for the object to fit. */
+  posture.points.resize(1);
+  posture.points[0].positions.resize(1);
+  posture.points[0].positions[0] = 0.0;
+  posture.points[0].time_from_start = ros::Duration(0.5);
+  // END_SUB_TUTORIAL
 }
 
-////////////////////////////////////////////////////////////////////////////////////
-
-void closedGripper()
+void closedGripper(trajectory_msgs::JointTrajectory& posture)
 {
-  
+  // BEGIN_SUB_TUTORIAL closed_gripper
+  /* Add both finger joints of panda robot. */
+  posture.joint_names.resize(1);
+  posture.joint_names[0] = "rg2_eef_joint";
+  posture.joint_names[0] = "wrist_3_joint";
+
+  /* Set them as closed. */
+  posture.points.resize(1);
+  posture.points[0].positions.resize(1);
+  posture.points[0].positions[0] = 0.00;
+  posture.points[0].time_from_start = ros::Duration(0.5);
+  // END_SUB_TUTORIAL
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -43,10 +63,10 @@ void pick(moveit::planning_interface::MoveGroupInterface& move_group)
   grasps[0].grasp_pose.pose.position.x = 0.4;
   grasps[0].grasp_pose.pose.position.y = .1;
   grasps[0].grasp_pose.pose.position.z = 0.98;
-  grasps[0].grasp_pose.pose.orientation.x = 0;
-  grasps[0].grasp_pose.pose.orientation.y = 1;
-  grasps[0].grasp_pose.pose.orientation.z = 0;
-  grasps[0].grasp_pose.pose.orientation.w = 0;
+  grasps[0].grasp_pose.pose.orientation.x = 0.5;
+  grasps[0].grasp_pose.pose.orientation.y = 0.5;
+  grasps[0].grasp_pose.pose.orientation.z = -0.5;
+  grasps[0].grasp_pose.pose.orientation.w = 0.5;
 
   // Setting pre-grasp approach
   // ++++++++++++++++++++++++++
@@ -54,8 +74,8 @@ void pick(moveit::planning_interface::MoveGroupInterface& move_group)
   grasps[0].pre_grasp_approach.direction.header.frame_id = "world";
   /* Direction is set as negative z axis */
   grasps[0].pre_grasp_approach.direction.vector.z = -1.0;
-  grasps[0].pre_grasp_approach.min_distance = .001; //0.01;
-  grasps[0].pre_grasp_approach.desired_distance = .00115; //0.0115;
+  grasps[0].pre_grasp_approach.min_distance = .005; //0.01;
+  grasps[0].pre_grasp_approach.desired_distance = .0115; //0.0115;
 
   // Setting post-grasp retreat
   // ++++++++++++++++++++++++++
@@ -64,19 +84,19 @@ void pick(moveit::planning_interface::MoveGroupInterface& move_group)
   /* Direction is set as positive z axis */
   grasps[0].post_grasp_retreat.direction.vector.z = 1;
   grasps[0].post_grasp_retreat.min_distance = .001; //0.01;
-  grasps[0].post_grasp_retreat.desired_distance = .0025; //0.025;
+  grasps[0].post_grasp_retreat.desired_distance = .045; //0.025;
 
   // Setting posture of eef before grasp
   // +++++++++++++++++++++++++++++++++++
-  openGripper();
+  openGripper(grasps[0].pre_grasp_posture);
 
 
   // Setting posture of eef during grasp
   // +++++++++++++++++++++++++++++++++++
-  closedGripper();
+  closedGripper(grasps[0].grasp_posture);
 
   // Set support surface as table1.
-  //move_group.setSupportSurfaceName("base");			//*********
+  //move_group.setSupportSurfaceName("base");			
   // Call pick to pick up the object using the grasps given
   move_group.pick("object", grasps);
   
@@ -94,14 +114,19 @@ void place(moveit::planning_interface::MoveGroupInterface& group)
   // Setting place location pose
   // +++++++++++++++++++++++++++
   place_location[0].place_pose.header.frame_id = "world";
-  tf2::Quaternion orientation;
-  orientation.setRPY(0, 0, 0);
-  place_location[0].place_pose.pose.orientation = tf2::toMsg(orientation);
+//  tf2::Quaternion orientation;
+//  orientation.setRPY(0, 0, 0);
+//  place_location[0].place_pose.pose.orientation = tf2::toMsg(orientation);
 
   /* While placing it is the exact location of the center of the object. */
-  place_location[0].place_pose.pose.position.x = 0.25;
+  // And orientation is now the object's, not the joint
+  place_location[0].place_pose.pose.position.x = 0.3;
   place_location[0].place_pose.pose.position.y = 0.35;
-  place_location[0].place_pose.pose.position.z = 0.95;
+  place_location[0].place_pose.pose.position.z = 0.6;
+  place_location[0].place_pose.pose.orientation.x = 0.0;
+  place_location[0].place_pose.pose.orientation.y = 0.0;
+  place_location[0].place_pose.pose.orientation.z = 0.0;
+  place_location[0].place_pose.pose.orientation.w = 1.0;
 
   // Setting pre-place approach
   // ++++++++++++++++++++++++++
@@ -109,22 +134,22 @@ void place(moveit::planning_interface::MoveGroupInterface& group)
   place_location[0].pre_place_approach.direction.header.frame_id = "world";
   /* Direction is set as negative z axis */
   place_location[0].pre_place_approach.direction.vector.z = -1.0;
-  place_location[0].pre_place_approach.min_distance = 0.095;
-  place_location[0].pre_place_approach.desired_distance = 0.115;
+  place_location[0].pre_place_approach.min_distance = 0.005;
+  place_location[0].pre_place_approach.desired_distance = 0.0115;
 
   // Setting post-grasp retreat
   // ++++++++++++++++++++++++++
   /* Defined with respect to frame_id */
   place_location[0].post_place_retreat.direction.header.frame_id = "world";
   /* Direction is set as negative y axis */
-  place_location[0].post_place_retreat.direction.vector.y = -1.0;
-  place_location[0].post_place_retreat.min_distance = 0.1;
-  place_location[0].post_place_retreat.desired_distance = 0.25;
+  place_location[0].post_place_retreat.direction.vector.z = 1.0;
+  place_location[0].post_place_retreat.min_distance = 0.001;
+  place_location[0].post_place_retreat.desired_distance = 0.025;
 
   // Setting posture of eef after placing object
   // +++++++++++++++++++++++++++++++++++++++++++
   /* Similar to the pick case */
-  openGripper();
+  openGripper(place_location[0].post_place_posture);
 
   // Set support surface as table2.
   group.setSupportSurfaceName("table2");
@@ -208,7 +233,7 @@ int main(int argc, char** argv)
   
 
   // Wait a bit for ROS things to initialize
-  ros::WallDuration(10.0).sleep();
+  ros::WallDuration(1.0).sleep();
 
   pick(group);
 
